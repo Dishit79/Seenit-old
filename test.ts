@@ -1,5 +1,6 @@
 import puppeteer from "https://deno.land/x/puppeteer/mod.ts";
 import { sleep } from "https://deno.land/x/sleep/mod.ts";
+import { download, Destination } from "https://deno.land/x/download/mod.ts";
 
 const browser = await puppeteer.launch({ headless: true});
 const page = await browser.newPage();
@@ -14,8 +15,16 @@ await sleep(11);
 console.log("sleep done");
 
 const name = await page.evaluate(() => {
-  return document.querySelector("#downloads > p:nth-child(3)").innerHTML;
+  return document.querySelector("#downloads > p:nth-child(3) > a").getAttribute('href')
 })
 console.log(name);
 
+
+try {
+  console.log('down started');
+  const fileObj = await download(name);
+} catch (err) {
+    console.log("fucked up")
+    console.log(err)
+}
 //  await browser.close();
